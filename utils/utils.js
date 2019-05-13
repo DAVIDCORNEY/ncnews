@@ -8,7 +8,7 @@ const formatDate = article => {
 const renameKeys = (arr, keyToChange, newKey) => {
   return (changeKey = arr.map(element => {
     const newObj = {};
-    Object.keys(element).forEach(function(key) {
+    Object.keys(element).forEach(key => {
       return key === keyToChange
         ? (newObj[newKey] = element[key])
         : (newObj[key] = element[key]);
@@ -17,4 +17,12 @@ const renameKeys = (arr, keyToChange, newKey) => {
   }));
 };
 
-module.exports = { formatDate, renameKeys };
+const createRef = (arr, param1, param2) => {
+  const newObj = {};
+  arr.forEach(item => {
+    return (newObj[item[param1]] = item[param2]);
+  });
+  return newObj;
+};
+
+module.exports = { formatDate, renameKeys, createRef };
