@@ -5,4 +5,16 @@ const formatDate = article => {
   });
 };
 
-module.exports = { formatDate };
+const renameKeys = (arr, keyToChange, newKey) => {
+  return (changeKey = arr.map(element => {
+    const newObj = {};
+    Object.keys(element).forEach(function(key) {
+      return key === keyToChange
+        ? (newObj[newKey] = element[key])
+        : (newObj[key] = element[key]);
+    });
+    return newObj;
+  }));
+};
+
+module.exports = { formatDate, renameKeys };
