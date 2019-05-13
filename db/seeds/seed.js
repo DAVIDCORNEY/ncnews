@@ -1,4 +1,5 @@
-const { topicData, userData } = require("../data");
+const { topicData, userData, articleData } = require("../data");
+const { formatDate } = require("../../utils/utils");
 
 exports.seed = (knex, Promise) => {
   return knex.migrate
@@ -12,6 +13,12 @@ exports.seed = (knex, Promise) => {
     .then(() => {
       return knex("users")
         .insert(userData)
+        .returning("*");
+    })
+    .then(() => {
+      const dateFormatted = formatDate(articleData);
+      return knex("articles")
+        .insert(dateFormatted)
         .returning("*");
     });
 };
