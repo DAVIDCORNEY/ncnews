@@ -20,7 +20,7 @@ describe("/", () => {
         });
     });
   });
-  describe.only("/api/topics", () => {
+  describe("/api/topics", () => {
     it("GET status: 200", () => {
       return request(app)
         .get("/api/topics")
@@ -36,6 +36,13 @@ describe("/", () => {
           expect(res.body.topics[0].description).to.be.a("string");
           expect(res.body.topics[0].slug).to.be.a("string");
         });
+    });
+  });
+  describe.only("/api/articles", () => {
+    it("GET status: 200", () => {
+      return request(app)
+        .get("/api/articles")
+        .expect(200);
     });
   });
 });
