@@ -1,5 +1,10 @@
 const { expect } = require("chai");
-const { formatDate, renameKeys, createRef } = require("../utils/utils");
+const {
+  formatDate,
+  renameKeys,
+  createRef,
+  formatDateandKeys
+} = require("../utils/utils");
 
 describe("formatDate", () => {
   it("returns a new array when passed an array", () => {
@@ -143,5 +148,69 @@ describe("createRef", () => {
     const actual = createRef(input, "title", "primary");
     const expected = { "Running a Node App": 1, "Working with Redux": 2 };
     expect(actual).to.eql(expected);
+  });
+});
+
+describe("formatDateandKeys", () => {
+  it("returns a new array, when passed an array", () => {
+    const input = [];
+    const expected = [];
+    expect(formatDateandKeys(input)).to.eql(expected);
+    expect(formatDateandKeys(input)).to.not.equal(expected);
+  });
+  it("returns a new array with a key value pair of an article id and number based on a lookup object", () => {
+    const input = [
+      {
+        belongs_to:
+          "The People Tracking Every Touch, Pass And Tackle in the World Cup"
+      }
+    ];
+    const lookup = {
+      "The People Tracking Every Touch, Pass And Tackle in the World Cup": 1
+    };
+    const expected = [{ article_id: 1 }];
+    expect(formatDateandKeys(input, lookup)).to.eql(expected);
+  });
+  it("returns a new array with multiple key value pairs including an article id and number based on a lookup object", () => {
+    const input = [
+      {
+        comment_id: 1,
+        belongs_to:
+          "The People Tracking Every Touch, Pass And Tackle in the World Cup",
+        author: "tickle122"
+      }
+    ];
+    const lookup = {
+      "The People Tracking Every Touch, Pass And Tackle in the World Cup": 1
+    };
+    const expected = [
+      {
+        comment_id: 1,
+        article_id: 1,
+        author: "tickle122"
+      }
+    ];
+    expect(formatDateandKeys(input, lookup)).to.eql(expected);
+  });
+  it("returns a new array with multiple key value pairs including an article id and number based on a lookup object and a time stamp reformatted to a human readable date", () => {
+    const input = [
+      {
+        comment_id: 1,
+        belongs_to:
+          "The People Tracking Every Touch, Pass And Tackle in the World Cup",
+        created_at: 1468087638932
+      }
+    ];
+    const lookup = {
+      "The People Tracking Every Touch, Pass And Tackle in the World Cup": 1
+    };
+    const expected = [
+      {
+        comment_id: 1,
+        article_id: 1,
+        created_at: "Sat Jul 09 2016"
+      }
+    ];
+    expect(formatDateandKeys(input, lookup)).to.eql(expected);
   });
 });

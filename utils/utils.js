@@ -25,4 +25,22 @@ const createRef = (arr, param1, param2) => {
   return newObj;
 };
 
-module.exports = { formatDate, renameKeys, createRef };
+const formatDateandKeys = (arr, articleRef) => {
+  const formatData = arr.map(obj => {
+    const newObj = {};
+    Object.keys(obj).forEach(key => {
+      if (key === "belongs_to") {
+        newObj["article_id"] = articleRef[obj[key]];
+      } else {
+        newObj[key] = obj[key];
+      }
+      if (key === "created_at") {
+        newObj["created_at"] = new Date(obj.created_at).toDateString();
+      }
+    });
+    return newObj;
+  });
+  return formatData;
+};
+
+module.exports = { formatDate, renameKeys, createRef, formatDateandKeys };
