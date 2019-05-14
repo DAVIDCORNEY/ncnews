@@ -26,5 +26,16 @@ describe("/", () => {
         .get("/api/topics")
         .expect(200);
     });
+    it("GET status: 200 responds with an array of topics objects ", () => {
+      return request(app)
+        .get("/api/topics")
+        .expect(200)
+        .then(res => {
+          expect(res.body.topics).to.be.an("array");
+          expect(res.body.topics[0]).to.have.keys("description", "slug");
+          expect(res.body.topics[0].description).to.be.a("string");
+          expect(res.body.topics[0].slug).to.be.a("string");
+        });
+    });
   });
 });
