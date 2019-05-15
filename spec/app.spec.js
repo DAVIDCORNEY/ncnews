@@ -102,7 +102,7 @@ describe("/", () => {
           });
         });
     });
-    it("GET status:200 responds with an array of articles sorted by any valid column (article_id) with the order as sent in the input", () => {
+    it("GET status:200 responds with an array of articles sorted by any valid column (article_id) with the order as sent in the query", () => {
       return request(app)
         .get("/api/articles?sort_by=article_id&&order=asc")
         .expect(200)
