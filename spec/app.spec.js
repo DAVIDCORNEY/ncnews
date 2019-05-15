@@ -237,5 +237,15 @@ describe("/", () => {
           });
         });
     });
+    it("GET status:200 responds with an array of comments sorted by any valid column (comment_id) with the order as sent in the query", () => {
+      return request(app)
+        .get("/api/articles/1/comments?sort_by=comment_id&&order=asc")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.comments).to.be.sortedBy("comment_id", {
+            descending: false
+          });
+        });
+    });
   });
 });
