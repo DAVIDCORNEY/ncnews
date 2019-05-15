@@ -188,7 +188,7 @@ describe("/", () => {
         });
     });
   });
-  describe.only("/api/articles/:article_id/comments", () => {
+  describe("/api/articles/:article_id/comments", () => {
     it("GET status:200 when passed a valid id", () => {
       return request(app)
         .get("/api/articles/1/comments")
@@ -246,6 +246,13 @@ describe("/", () => {
             descending: false
           });
         });
+    });
+  });
+  describe.only("/api/articles/:article_id/comments", () => {
+    it("POST status:201 when passed a valid article id", () => {
+      return request(app)
+        .post("/api/articles/1/comments")
+        .expect(201);
     });
   });
 });

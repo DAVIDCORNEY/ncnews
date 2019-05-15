@@ -36,3 +36,7 @@ exports.getArticleComments = (req, res, next) => {
     })
     .catch(next);
 };
+
+exports.postArticleComment = (req, res, next) => {
+  res.sendStatus(201);
+};
