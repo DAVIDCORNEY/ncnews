@@ -51,3 +51,11 @@ exports.updateArticle = ({ id }, { inc_votes }) => {
     .increment("votes", inc_votes)
     .returning("*");
 };
+
+exports.fetchArticleComments = ({ id }) => {
+  return connection
+    .select("*")
+    .from("comments")
+    .where("comments.article_id", "=", id)
+    .returning("*");
+};

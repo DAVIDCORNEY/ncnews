@@ -137,7 +137,7 @@ describe("/", () => {
         });
     });
   });
-  describe.only("/articles/:article_id", () => {
+  describe("/articles/:article_id", () => {
     it("GET status: 200 when passed a valid id", () => {
       return request(app)
         .get("/api/articles/1")
@@ -185,6 +185,21 @@ describe("/", () => {
             author: "butter_bridge",
             created_at: "2018-11-15T00:00:00.000Z"
           });
+        });
+    });
+  });
+  describe.only("/api/articles/:article_id/comments", () => {
+    it("GET status:200 when passed a valid id", () => {
+      return request(app)
+        .get("/api/articles/1/comments")
+        .expect(200);
+    });
+    it("GET status: 200 responds with an array of comments for the given id", () => {
+      return request(app)
+        .get("/api/articles/1/comments")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.comments.length).to.equal(13);
         });
     });
   });
