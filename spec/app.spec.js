@@ -199,7 +199,32 @@ describe("/", () => {
         .get("/api/articles/1/comments")
         .expect(200)
         .then(({ body }) => {
+          expect(body.comments).to.be.an("array");
           expect(body.comments.length).to.equal(13);
+        });
+    });
+    it("GET status: 200 responds with an array of comments with the following properties", () => {
+      return request(app)
+        .get("/api/articles/1/comments")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.comments[0]).to.have.keys(
+            "comment_id",
+            "votes",
+            "created_at",
+            "author",
+            "body"
+          );
+        });
+    });
+    it("GET status:200 responds with an array of comments sorted by date in descending order by default", () => {
+      return request(app)
+        .get("/api/articles/1/comments")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.comments).to.be.sortedBy("created_at", {
+            descending: true
+          });
         });
     });
   });
