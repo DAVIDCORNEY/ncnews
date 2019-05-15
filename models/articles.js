@@ -42,3 +42,12 @@ exports.fetchArticleById = ({ id }) => {
     .groupBy("articles.article_id")
     .where("articles.article_id", id);
 };
+
+exports.updateArticle = ({ id }, { inc_votes }) => {
+  return connection
+    .select("*")
+    .from("articles")
+    .where("articles.article_id", id)
+    .increment("votes", inc_votes)
+    .returning("*");
+};

@@ -160,5 +160,32 @@ describe("/", () => {
           );
         });
     });
+    it("PATCH status:200 accepts a body of inc_votes and increases the vote property by a number", () => {
+      return request(app)
+        .patch("/api/articles/1")
+        .send({ inc_votes: 1 })
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.article[0].votes).to.equal(101);
+        });
+    });
+    it("PATCH status:200 accepts a body of inc_votes and decreases the vote property by a number", () => {
+      return request(app)
+        .patch("/api/articles/1")
+        .send({ inc_votes: -1 })
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.article[0].votes).to.equal(99);
+          expect(body.article[0]).to.eql({
+            article_id: 1,
+            title: "Living in the shadow of a great man",
+            body: "I find this existence challenging",
+            votes: 99,
+            topic: "mitch",
+            author: "butter_bridge",
+            created_at: "2018-11-15T00:00:00.000Z"
+          });
+        });
+    });
   });
 });
