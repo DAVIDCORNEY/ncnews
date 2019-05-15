@@ -41,7 +41,7 @@ describe("/", () => {
         });
     });
   });
-  describe.only("/api/articles", () => {
+  describe("/api/articles", () => {
     it("GET status: 200", () => {
       return request(app)
         .get("/api/articles")
@@ -137,9 +137,11 @@ describe("/", () => {
         });
     });
   });
-//   describe('/articles/:article_id', () => {
-//     it('GET status: 200 when passed a valid id', () => {
-//       return request(app).get("/api/articles/1").expect
-//     });
-//   });
-// });
+  describe.only("/articles/:article_id", () => {
+    it("GET status: 200 when passed a valid id", () => {
+      return request(app)
+        .get("/api/articles/1")
+        .expect(200);
+    });
+  });
+});
