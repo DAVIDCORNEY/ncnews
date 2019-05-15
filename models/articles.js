@@ -24,3 +24,21 @@ exports.fetchArticles = ({
       if (topic) query.where("articles.topic", "like", topic);
     });
 };
+
+exports.fetchArticleById = ({ id }) => {
+  return connection
+    .select(
+      "articles.article_id",
+      "articles.title",
+      "articles.body",
+      "articles.votes",
+      "articles.topic",
+      "articles.author",
+      "articles.created_at"
+    )
+    .from("articles")
+    .leftJoin("comments", "articles.article_id", "=", "comments.article_id")
+    .count("comment_id AS comment_count")
+    .groupBy("articles.article_id")
+    .where("articles.article_id", id);
+};

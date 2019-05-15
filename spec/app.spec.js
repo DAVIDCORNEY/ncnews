@@ -143,5 +143,22 @@ describe("/", () => {
         .get("/api/articles/1")
         .expect(200);
     });
+    it("GET status:200 responds with an array with a comment_count key", () => {
+      return request(app)
+        .get("/api/articles/1")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.article[0]).to.have.keys(
+            "article_id",
+            "title",
+            "body",
+            "votes",
+            "topic",
+            "author",
+            "created_at",
+            "comment_count"
+          );
+        });
+    });
   });
 });
