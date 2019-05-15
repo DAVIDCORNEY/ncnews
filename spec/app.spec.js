@@ -112,5 +112,34 @@ describe("/", () => {
           });
         });
     });
+    it("GET status:200 responds with an array of articles filtered by author in the given query", () => {
+      return request(app)
+        .get("/api/articles?author=icellusedkars")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.articles[0].author).to.eql("icellusedkars");
+          const allAuthors = body.articles.every(
+            article => article.author === "icellusedkars"
+          );
+          expect(allAuthors).to.be.true;
+        });
+    });
+    it("GET status:200 responds with an array of articles filtered by topic in the given query", () => {
+      return request(app)
+        .get("/api/articles?topic=mitch")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.articles[0].topic).to.eql("mitch");
+          const allTopics = body.articles.every(
+            article => article.topic === "mitch"
+          );
+          expect(allTopics).to.be.true;
+        });
+    });
   });
-});
+//   describe('/articles/:article_id', () => {
+//     it('GET status: 200 when passed a valid id', () => {
+//       return request(app).get("/api/articles/1").expect
+//     });
+//   });
+// });
