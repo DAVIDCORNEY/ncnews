@@ -227,5 +227,15 @@ describe("/", () => {
           });
         });
     });
+    it("GET status:200 responds with an array of comments sorted by any valid column (votes)", () => {
+      return request(app)
+        .get("/api/articles/1/comments?sort_by=votes")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.comments).to.be.sortedBy("votes", {
+            descending: true
+          });
+        });
+    });
   });
 });

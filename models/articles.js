@@ -52,11 +52,10 @@ exports.updateArticle = ({ id }, { inc_votes }) => {
     .returning("*");
 };
 
-exports.fetchArticleComments = ({
-  id,
-  sort_by = "created_at",
-  order = "desc"
-}) => {
+exports.fetchArticleComments = (
+  { id },
+  { sort_by = "created_at", order = "desc" }
+) => {
   return connection
     .select(
       "comments.comment_id",
