@@ -378,7 +378,7 @@ describe("/", () => {
     describe("Errors on /api/comments/:comment_id", () => {
       it("GET status 405 responds with an error when given an invalid method", () => {
         return request(app)
-          .put("/api/articles/1/comments")
+          .put("/api/comments/1")
           .expect(405)
           .then(({ body }) => {
             expect(body.msg).to.equal("Method Not Allowed");
