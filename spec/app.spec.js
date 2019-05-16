@@ -226,6 +226,16 @@ describe("/", () => {
           });
         });
     });
+    describe("Errors /api/articles/:article_id", () => {
+      it("GET status 405 responds with an error when given an invalid method", () => {
+        return request(app)
+          .put("/api/articles/1")
+          .expect(405)
+          .then(({ body }) => {
+            expect(body.msg).to.equal("Method Not Allowed");
+          });
+      });
+    });
   });
   describe("/api/articles/:article_id/comments", () => {
     it("GET status:200 when passed a valid id", () => {
@@ -286,6 +296,16 @@ describe("/", () => {
           });
         });
     });
+    describe("Errors /api/articles/:article_id/comments", () => {
+      it("GET status 405 responds with an error when given an invalid method", () => {
+        return request(app)
+          .put("/api/articles/1/comments")
+          .expect(405)
+          .then(({ body }) => {
+            expect(body.msg).to.equal("Method Not Allowed");
+          });
+      });
+    });
   });
   describe("/api/articles/:article_id/comments", () => {
     it("POST status:201 and a comment object containing the new comment", () => {
@@ -310,6 +330,16 @@ describe("/", () => {
           expect(body.comment[0].comment_id).to.be.a("number");
           expect(body.comment[0].body).to.be.a("string");
         });
+    });
+    describe("Errors on POST /api/articles/:article_id/comments", () => {
+      it("GET status 405 responds with an error when given an invalid method", () => {
+        return request(app)
+          .put("/api/articles/1/comments")
+          .expect(405)
+          .then(({ body }) => {
+            expect(body.msg).to.equal("Method Not Allowed");
+          });
+      });
     });
   });
   describe("/api/comments/:comment_id", () => {
@@ -344,6 +374,16 @@ describe("/", () => {
               "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!"
           });
         });
+    });
+    describe("Errors on /api/comments/:comment_id", () => {
+      it("GET status 405 responds with an error when given an invalid method", () => {
+        return request(app)
+          .put("/api/articles/1/comments")
+          .expect(405)
+          .then(({ body }) => {
+            expect(body.msg).to.equal("Method Not Allowed");
+          });
+      });
     });
   });
   describe("/api/users/:username", () => {
