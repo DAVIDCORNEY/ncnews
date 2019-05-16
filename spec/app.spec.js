@@ -249,24 +249,29 @@ describe("/", () => {
     });
   });
   describe("/api/articles/:article_id/comments", () => {
-    it("POST status:201 when passed a valid article id", () => {
+    it("POST status:201 and a comment object containing the new comment", () => {
       return request(app)
         .post("/api/articles/1/comments")
-        .expect(201);
+        .send({
+          username: "lurker",
+          body: "test"
+        })
+        .expect(201)
+        .then(({ body }) => {
+          console.log(body);
+          expect(body.comment[0].author).to.be.a("string");
+          expect(body.comment[0]).to.have.keys(
+            "comment_id",
+            "author",
+            "article_id",
+            "votes",
+            "created_at",
+            "body"
+          );
+          expect(body.comment[0].comment_id).to.be.a("number");
+          expect(body.comment[0].body).to.be.a("string");
+        });
     });
-    // it("POST status:201 and a comment object containing the new comment", () => {
-    //   return request(app)
-    //     .post("/api/articles/1/comments")
-    //     .send({
-    //       author: "lurker",
-    //       body: "test"
-    //     })
-    //     .expect(201)
-    //     .then(({ body }) => {
-    //       console.log(body);
-    //       expect(body.comments).to.be.a("string");
-    //     });
-    // });
   });
   describe("/api/comments/:comment_id", () => {
     it("PATCH status:200 when passed a valid comment id", () => {
@@ -302,7 +307,7 @@ describe("/", () => {
         });
     });
   });
-  describe.only("/api/users/:username", () => {
+  describe("/api/users/:username", () => {
     it("GET status:200", () => {
       return request(app)
         .get("/api/users/lurker")
@@ -317,6 +322,13 @@ describe("/", () => {
           expect(body.user[0].avatar_url).to.be.a("string");
           expect(body.user[0].name).to.be.a("string");
         });
+    });
+  });
+  describe("/api/comments/:comment_id", () => {
+    it("DELETE /:comment_id status: 204 deletes the specified comment", () => {
+      return request(app)
+        .delete("/api/comments/1")
+        .expect(204);
     });
   });
 });

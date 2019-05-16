@@ -7,3 +7,9 @@ exports.updateComment = ({ id }, { inc_votes }) => {
     .increment("votes", inc_votes)
     .returning("*");
 };
+
+exports.removeHouseById = ({ id }) => {
+  return connection("comments")
+    .where("comments.comment_id", id)
+    .del();
+};

@@ -32,7 +32,6 @@ exports.patchArticle = (req, res, next) => {
 exports.getArticleComments = (req, res, next) => {
   fetchArticleComments(req.params, req.query)
     .then(comments => {
-      console.log({ comments });
       res.status(200).send({ comments });
     })
     .catch(next);

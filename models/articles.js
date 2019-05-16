@@ -70,9 +70,12 @@ exports.fetchArticleComments = (
     .returning("*");
 };
 
-exports.insertArticleComment = ({ id }, { comment }) => {
+exports.insertArticleComment = ({ id }, comment) => {
+  const newObj = {};
+  newObj.author = comment.username;
+  newObj.body = comment.body;
+  newObj.article_id = id;
   return connection("comments")
-    .where("comments.article_id", "=", id)
-    .insert(comment)
+    .insert(newObj)
     .returning("*");
 };
