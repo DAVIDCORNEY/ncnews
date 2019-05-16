@@ -13,6 +13,18 @@ describe("/", () => {
   beforeEach(() => connection.seed.run());
   after(() => connection.destroy());
 
+  describe("/not_a_route", () => {
+    it("ANY status:404 - responds with a 'Route Not Found' error", () => {
+      return request(app)
+        .get("/not_a_route")
+        .expect(404)
+        .then(({ body }) => {
+          console.log(body);
+          expect(body.msg).to.eql("Route Not Found");
+        });
+    });
+  });
+
   describe("/api", () => {
     it("GET status:200", () => {
       return request(app)
@@ -135,6 +147,16 @@ describe("/", () => {
           );
           expect(allTopics).to.be.true;
         });
+    });
+    describe("errors", () => {
+      it("GET status:400 responds with an error when given an invalid sort by query", () => {
+        return request(app)
+          .get("/api/articles?sort_by=no_a_column")
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).to.equal("Bad request: Column does not exist");
+          });
+      });
     });
   });
   describe("/articles/:article_id", () => {
