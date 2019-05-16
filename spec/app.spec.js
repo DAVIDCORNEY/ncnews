@@ -248,11 +248,58 @@ describe("/", () => {
         });
     });
   });
-  describe.only("/api/articles/:article_id/comments", () => {
+  describe("/api/articles/:article_id/comments", () => {
     it("POST status:201 when passed a valid article id", () => {
       return request(app)
         .post("/api/articles/1/comments")
         .expect(201);
+    });
+    // it("POST status:201 and a comment object containing the new comment", () => {
+    //   return request(app)
+    //     .post("/api/articles/1/comments")
+    //     .send({
+    //       author: "lurker",
+    //       body: "test"
+    //     })
+    //     .expect(201)
+    //     .then(({ body }) => {
+    //       console.log(body);
+    //       expect(body.comments).to.be.a("string");
+    //     });
+    // });
+  });
+  describe.only("/api/comments/:comment_id", () => {
+    it("PATCH status:200 when passed a valid comment id", () => {
+      return request(app)
+        .patch("/api/comments/1")
+        .expect(200);
+    });
+    it("PATCH status:200 accepts a body of inc_votes and increases the vote property by a number", () => {
+      return request(app)
+        .patch("/api/comments/1")
+        .send({ inc_votes: 1 })
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.comment[0].votes).to.equal(17);
+        });
+    });
+    it("PATCH status:200 accepts a body of inc_votes and decreases the vote property by a number", () => {
+      return request(app)
+        .patch("/api/comments/1")
+        .send({ inc_votes: -1 })
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.comment[0].votes).to.equal(15);
+          expect(body.comment[0]).to.eql({
+            comment_id: 1,
+            author: "butter_bridge",
+            article_id: 9,
+            votes: 15,
+            created_at: "2017-11-22T00:00:00.000Z",
+            body:
+              "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!"
+          });
+        });
     });
   });
 });

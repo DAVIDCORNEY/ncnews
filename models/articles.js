@@ -69,3 +69,10 @@ exports.fetchArticleComments = (
     .orderBy(sort_by, order)
     .returning("*");
 };
+
+exports.insertArticleComment = ({ id }, { comment }) => {
+  return connection("comments")
+    .where("comments.article_id", "=", id)
+    .insert(comment)
+    .returning("*");
+};

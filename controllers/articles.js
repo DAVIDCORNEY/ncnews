@@ -2,7 +2,8 @@ const {
   fetchArticles,
   fetchArticleById,
   updateArticle,
-  fetchArticleComments
+  fetchArticleComments,
+  insertArticleComment
 } = require("../models/articles");
 exports.getArticles = (req, res, next) => {
   fetchArticles(req.query)
@@ -38,5 +39,9 @@ exports.getArticleComments = (req, res, next) => {
 };
 
 exports.postArticleComment = (req, res, next) => {
-  res.sendStatus(201);
+  insertArticleComment(req.params, req.body)
+    .then(comment => {
+      res.status(201).send({ comment });
+    })
+    .catch(next);
 };
