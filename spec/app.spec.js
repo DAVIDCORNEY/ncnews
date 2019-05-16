@@ -19,7 +19,6 @@ describe("/", () => {
         .get("/not_a_route")
         .expect(404)
         .then(({ body }) => {
-          console.log(body);
           expect(body.msg).to.eql("Route Not Found");
         });
     });
@@ -51,6 +50,16 @@ describe("/", () => {
           expect(res.body.topics[0].description).to.be.a("string");
           expect(res.body.topics[0].slug).to.be.a("string");
         });
+    });
+    describe("Errors,/api/topics", () => {
+      it("GET status 405 responds with an error when given an invalid method", () => {
+        return request(app)
+          .put("/api/topics")
+          .expect(405)
+          .then(({ body }) => {
+            expect(body.msg).to.equal("Method Not Allowed");
+          });
+      });
     });
   });
   describe("/api/articles", () => {
@@ -148,13 +157,21 @@ describe("/", () => {
           expect(allTopics).to.be.true;
         });
     });
-    describe("errors", () => {
+    describe("Errors /api/articles", () => {
       it("GET status:400 responds with an error when given an invalid sort by query", () => {
         return request(app)
           .get("/api/articles?sort_by=no_a_column")
           .expect(400)
           .then(({ body }) => {
             expect(body.msg).to.equal("Bad request: Column does not exist");
+          });
+      });
+      it("GET status 405 responds with an error when given an invalid method", () => {
+        return request(app)
+          .put("/api/articles")
+          .expect(405)
+          .then(({ body }) => {
+            expect(body.msg).to.equal("Method Not Allowed");
           });
       });
     });
