@@ -268,7 +268,7 @@ describe("/", () => {
     //     });
     // });
   });
-  describe.only("/api/comments/:comment_id", () => {
+  describe("/api/comments/:comment_id", () => {
     it("PATCH status:200 when passed a valid comment id", () => {
       return request(app)
         .patch("/api/comments/1")
@@ -299,6 +299,23 @@ describe("/", () => {
             body:
               "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!"
           });
+        });
+    });
+  });
+  describe.only("/api/users/:username", () => {
+    it("GET status:200", () => {
+      return request(app)
+        .get("/api/users/lurker")
+        .expect(200);
+    });
+    it("GET status:200 responds with a user object", () => {
+      return request(app)
+        .get("/api/users/lurker")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.user[0]).to.have.keys("username", "avatar_url", "name");
+          expect(body.user[0].avatar_url).to.be.a("string");
+          expect(body.user[0].name).to.be.a("string");
         });
     });
   });
