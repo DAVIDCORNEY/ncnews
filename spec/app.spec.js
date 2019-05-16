@@ -402,6 +402,16 @@ describe("/", () => {
           expect(body.user[0].name).to.be.a("string");
         });
     });
+    describe.only("Errors on /api/users/:username", () => {
+      it("GET status 405 responds with an error when given an invalid method", () => {
+        return request(app)
+          .put("/api/users/lurker")
+          .expect(405)
+          .then(({ body }) => {
+            expect(body.msg).to.equal("Method Not Allowed");
+          });
+      });
+    });
   });
   describe("/api/comments/:comment_id", () => {
     it("DELETE /:comment_id status: 204 deletes the specified comment", () => {
