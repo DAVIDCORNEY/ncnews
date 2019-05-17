@@ -39,7 +39,14 @@ exports.patchArticle = (req, res, next) => {
 exports.getArticleComments = (req, res, next) => {
   fetchArticleComments(req.params, req.query)
     .then(comments => {
-      res.status(200).send({ comments });
+      if (comments.length === 0) {
+        return Promise.reject({
+          status: 404,
+          msg: "Route Not Found"
+        });
+      } else {
+        res.status(200).send({ comments });
+      }
     })
     .catch(next);
 };

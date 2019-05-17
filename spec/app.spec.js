@@ -329,6 +329,14 @@ describe("/", () => {
             expect(body.msg).to.equal("Bad request: Column does not exist");
           });
       });
+      it.only("GET status 404 responds with an error when given an id that does not exist, but is of the correct format", () => {
+        return request(app)
+          .get("/api/articles/99999/comments")
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).to.equal("Route Not Found");
+          });
+      });
     });
   });
   describe("/api/articles/:article_id/comments", () => {
