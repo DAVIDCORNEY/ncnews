@@ -7,7 +7,7 @@ exports.methodNotAllowed = (req, res) => {
 };
 
 exports.handle400 = (err, req, res, next) => {
-  const psqlCodes = ["42703"];
+  const psqlCodes = ["42703", "22P02"];
   console.log(err);
   if (err.status === 400)
     res.status(400).send({ msg: "Bad request: Column does not exist" });

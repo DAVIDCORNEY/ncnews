@@ -235,14 +235,14 @@ describe("/", () => {
             expect(body.msg).to.equal("Method Not Allowed");
           });
       });
-      // it("GET status 400 responds with an error when given an invalid id", () => {
-      //   return request(app)
-      //     .get("/api/articles/notAnId")
-      //     .expect(400)
-      //     .then(({ body }) => {
-      //       expect(body.msg).to.equal("Method Not Allowed");
-      //     });
-      // });
+      it("GET status 400 responds with an error when given an invalid id", () => {
+        return request(app)
+          .get("/api/articles/notAnId")
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).to.equal("Bad request: Column does not exist");
+          });
+      });
       it("GET status 404 responds with an error when given an id that does not exist, but is of the correct format", () => {
         return request(app)
           .get("/api/articles/99999")
