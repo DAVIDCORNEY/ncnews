@@ -321,6 +321,14 @@ describe("/", () => {
             expect(body.msg).to.equal("Method Not Allowed");
           });
       });
+      it("GET status 400 responds with an error when given an invalid id", () => {
+        return request(app)
+          .get("/api/articles/notAnId/comments")
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).to.equal("Bad request: Column does not exist");
+          });
+      });
     });
   });
   describe("/api/articles/:article_id/comments", () => {
