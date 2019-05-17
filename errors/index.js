@@ -8,7 +8,20 @@ exports.methodNotAllowed = (req, res) => {
 
 exports.handle400 = (err, req, res, next) => {
   console.log(err);
-  res.status(400).send({ msg: "Bad request: Column does not exist" });
+  if (err) {
+    res.status(400).send({ msg: "Bad request: Column does not exist" });
+  } else {
+    next(err);
+  }
+};
+
+exports.handle404 = (err, req, res, next) => {
+  console.log(err);
+  if (err) {
+    res.status(404).send({ msg: "Route not found" });
+  } else {
+    next(err);
+  }
 };
 
 exports.handle500 = (err, req, res, next) => {

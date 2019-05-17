@@ -43,7 +43,7 @@ exports.fetchArticleById = ({ id }) => {
     .where("articles.article_id", id);
 };
 
-exports.updateArticle = ({ id }, { inc_votes }) => {
+exports.updateArticle = ({ id }, { inc_votes = 0 }) => {
   return connection
     .select("*")
     .from("articles")

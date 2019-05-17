@@ -16,7 +16,15 @@ exports.getArticles = (req, res, next) => {
 exports.getArticleById = (req, res, next) => {
   fetchArticleById(req.params)
     .then(article => {
-      res.status(200).send({ article });
+      console.log(article);
+      if (article.length === 0) {
+        return Promise.reject({
+          status: 404,
+          msg: "Route Not Found"
+        });
+      } else {
+        res.status(200).send({ article });
+      }
     })
     .catch(next);
 };

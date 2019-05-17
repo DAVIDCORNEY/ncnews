@@ -1,5 +1,5 @@
 const connection = require("../db/connection");
-exports.updateComment = ({ id }, { inc_votes }) => {
+exports.updateComment = ({ id }, { inc_votes = 0 }) => {
   return connection
     .select("*")
     .from("comments")

@@ -158,7 +158,7 @@ describe("/", () => {
         });
     });
     describe("Errors /api/articles", () => {
-      it("GET status:400 responds with an error when given an invalid sort by query", () => {
+      it.only("GET status:400 responds with an error when given an invalid sort by query", () => {
         return request(app)
           .get("/api/articles?sort_by=no_a_column")
           .expect(400)
@@ -233,6 +233,23 @@ describe("/", () => {
           .expect(405)
           .then(({ body }) => {
             expect(body.msg).to.equal("Method Not Allowed");
+          });
+      });
+      // it("GET status 400 responds with an error when given an invalid id", () => {
+      //   return request(app)
+      //     .get("/api/articles/notAnId")
+      //     .expect(400)
+      //     .then(({ body }) => {
+      //       expect(body.msg).to.equal("Method Not Allowed");
+      //     });
+      // });
+      it("GET status 404 responds with an error when given an id that does not exist, but is of the correct format", () => {
+        return request(app)
+          .get("/api/articles/99999")
+          .expect(404)
+          .then(({ body }) => {
+            console.log(body);
+            expect(body.msg).to.equal("Route Not Found");
           });
       });
     });
@@ -402,7 +419,7 @@ describe("/", () => {
           expect(body.user[0].name).to.be.a("string");
         });
     });
-    describe.only("Errors on /api/users/:username", () => {
+    describe("Errors on /api/users/:username", () => {
       it("GET status 405 responds with an error when given an invalid method", () => {
         return request(app)
           .put("/api/users/lurker")
@@ -418,6 +435,16 @@ describe("/", () => {
       return request(app)
         .delete("/api/comments/1")
         .expect(204);
+    });
+    describe("Errors on /api/comments/:comment_id", () => {
+      it("GET status 405 responds with an error when given an invalid method", () => {
+        return request(app)
+          .put("/api/comments/1")
+          .expect(405)
+          .then(({ body }) => {
+            expect(body.msg).to.equal("Method Not Allowed");
+          });
+      });
     });
   });
 });
