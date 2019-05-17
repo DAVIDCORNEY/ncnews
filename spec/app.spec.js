@@ -158,7 +158,7 @@ describe("/", () => {
         });
     });
     describe("Errors /api/articles", () => {
-      it.only("GET status:400 responds with an error when given an invalid sort by query", () => {
+      it("GET status:400 responds with an error when given an invalid sort by query", () => {
         return request(app)
           .get("/api/articles?sort_by=no_a_column")
           .expect(400)
@@ -248,7 +248,6 @@ describe("/", () => {
           .get("/api/articles/99999")
           .expect(404)
           .then(({ body }) => {
-            console.log(body);
             expect(body.msg).to.equal("Route Not Found");
           });
       });

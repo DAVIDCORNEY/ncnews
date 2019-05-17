@@ -7,18 +7,21 @@ exports.methodNotAllowed = (req, res) => {
 };
 
 exports.handle400 = (err, req, res, next) => {
+  const psqlCodes = ["42703"];
   console.log(err);
-  if (err) {
+  if (err.status === 400)
     res.status(400).send({ msg: "Bad request: Column does not exist" });
-  } else {
+  if (psqlCodes.includes(err.code))
+    res.status(400).send({ msg: "Bad request: Column does not exist" });
+  else {
     next(err);
   }
 };
 
 exports.handle404 = (err, req, res, next) => {
   console.log(err);
-  if (err) {
-    res.status(404).send({ msg: "Route not found" });
+  if (err.status === 404) {
+    res.status(404).send({ msg: "Route Not Found" });
   } else {
     next(err);
   }

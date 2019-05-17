@@ -16,7 +16,6 @@ exports.getArticles = (req, res, next) => {
 exports.getArticleById = (req, res, next) => {
   fetchArticleById(req.params)
     .then(article => {
-      console.log(article);
       if (article.length === 0) {
         return Promise.reject({
           status: 404,
