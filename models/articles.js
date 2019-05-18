@@ -71,10 +71,12 @@ exports.fetchArticleComments = (
 };
 
 exports.insertArticleComment = ({ id }, comment) => {
-  const newObj = {};
-  newObj.author = comment.username;
-  newObj.body = comment.body;
-  newObj.article_id = id;
+  const newObj = {
+    author: comment.username,
+    body: comment.body,
+    article_id: id
+  };
+
   return connection("comments")
     .insert(newObj)
     .returning("*");

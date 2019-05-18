@@ -7,15 +7,22 @@ exports.methodNotAllowed = (req, res) => {
 };
 
 exports.handle400 = (err, req, res, next) => {
-  const psqlCodes = ["42703", "22P02"];
   console.log(err);
-  if (err.status === 400)
-    res.status(400).send({ msg: "Bad request: Column does not exist" });
-  if (psqlCodes.includes(err.code))
-    res.status(400).send({ msg: "Bad request: Column does not exist" });
-  else {
-    next(err);
-  }
+  const codes = {
+    "42703": "Bad request: Column does not exist",
+    "22P02": "Bad request: Invalid Input Syntax for Type Integer",
+    "23502": "Bad Request: null value in column violates not-null constraint"
+  };
+  if (codes[err.code]) res.status(400).send({ msg: codes[err.code] });
+  // const psqlCodes = ["42703", "22P02"];
+  // if (err.status === 400)
+  //   res.status(400).send({ msg: "Bad request: Column does not exist" });
+  // if (psqlCodes.includes(err.code))
+  //   res.status(400).send({ msg: "Bad request: Column does not exist" });
+  // else {
+  //   next(err);
+  // }
+  else next(err);
 };
 
 exports.handle404 = (err, req, res, next) => {

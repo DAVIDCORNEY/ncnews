@@ -8,15 +8,22 @@ const {
 exports.getArticles = (req, res, next) => {
   fetchArticles(req.query)
     .then(articles => {
-      res.status(200).send({ articles });
+      if (articles.length === 0) {
+        return Promise.reject({
+          status: 404,
+          msg: "Route Not Found"
+        });
+      } else {
+        res.status(200).send({ articles });
+      }
     })
     .catch(next);
 };
 
 exports.getArticleById = (req, res, next) => {
   fetchArticleById(req.params)
-    .then(article => {
-      if (article.length === 0) {
+    .then(([article]) => {
+      if (!article) {
         return Promise.reject({
           status: 404,
           msg: "Route Not Found"
@@ -30,7 +37,7 @@ exports.getArticleById = (req, res, next) => {
 
 exports.patchArticle = (req, res, next) => {
   updateArticle(req.params, req.body)
-    .then(article => {
+    .then(([article]) => {
       res.status(200).send({ article });
     })
     .catch(next);
@@ -53,7 +60,7 @@ exports.getArticleComments = (req, res, next) => {
 
 exports.postArticleComment = (req, res, next) => {
   insertArticleComment(req.params, req.body)
-    .then(comment => {
+    .then(([comment]) => {
       res.status(201).send({ comment });
     })
     .catch(next);

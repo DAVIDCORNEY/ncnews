@@ -2,8 +2,8 @@ const { fetchUserByUsername } = require("../models/users");
 
 exports.getUsersByUsername = (req, res, next) => {
   fetchUserByUsername(req.params)
-    .then(user => {
-      if (user.length === 0) {
+    .then(([user]) => {
+      if (!user) {
         return Promise.reject({
           status: 404,
           msg: "Route Not Found"

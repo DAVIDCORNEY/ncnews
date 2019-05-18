@@ -166,6 +166,14 @@ describe("/", () => {
             expect(body.msg).to.equal("Bad request: Column does not exist");
           });
       });
+      it("GET status:404 responds with an error when given a query that does not exist, but is of the correct format", () => {
+        return request(app)
+          .get("/api/articles?topic=notopic")
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).to.equal("Route Not Found");
+          });
+      });
       it("GET status 405 responds with an error when given an invalid method", () => {
         return request(app)
           .put("/api/articles")
@@ -187,7 +195,7 @@ describe("/", () => {
         .get("/api/articles/1")
         .expect(200)
         .then(({ body }) => {
-          expect(body.article[0]).to.have.keys(
+          expect(body.article).to.have.keys(
             "article_id",
             "title",
             "body",
@@ -205,7 +213,7 @@ describe("/", () => {
         .send({ inc_votes: 1 })
         .expect(200)
         .then(({ body }) => {
-          expect(body.article[0].votes).to.equal(101);
+          expect(body.article.votes).to.equal(101);
         });
     });
     it("PATCH status:200 accepts a body of inc_votes and decreases the vote property by a number", () => {
@@ -214,8 +222,8 @@ describe("/", () => {
         .send({ inc_votes: -1 })
         .expect(200)
         .then(({ body }) => {
-          expect(body.article[0].votes).to.equal(99);
-          expect(body.article[0]).to.eql({
+          expect(body.article.votes).to.equal(99);
+          expect(body.article).to.eql({
             article_id: 1,
             title: "Living in the shadow of a great man",
             body: "I find this existence challenging",
@@ -240,7 +248,9 @@ describe("/", () => {
           .get("/api/articles/notAnId")
           .expect(400)
           .then(({ body }) => {
-            expect(body.msg).to.equal("Bad request: Column does not exist");
+            expect(body.msg).to.equal(
+              "Bad request: Invalid Input Syntax for Type Integer"
+            );
           });
       });
       it("GET status 404 responds with an error when given an id that does not exist, but is of the correct format", () => {
@@ -249,6 +259,17 @@ describe("/", () => {
           .expect(404)
           .then(({ body }) => {
             expect(body.msg).to.equal("Route Not Found");
+          });
+      });
+      it("PATCH status:400 responds with an error when given an invalid inc_votes value", () => {
+        return request(app)
+          .patch("/api/articles/1")
+          .send({ inc_votes: "a" })
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).to.equal(
+              "Bad request: Invalid Input Syntax for Type Integer"
+            );
           });
       });
     });
@@ -326,7 +347,9 @@ describe("/", () => {
           .get("/api/articles/notAnId/comments")
           .expect(400)
           .then(({ body }) => {
-            expect(body.msg).to.equal("Bad request: Column does not exist");
+            expect(body.msg).to.equal(
+              "Bad request: Invalid Input Syntax for Type Integer"
+            );
           });
       });
       it("GET status 404 responds with an error when given an id that does not exist, but is of the correct format", () => {
@@ -349,9 +372,8 @@ describe("/", () => {
         })
         .expect(201)
         .then(({ body }) => {
-          console.log(body);
-          expect(body.comment[0].author).to.be.a("string");
-          expect(body.comment[0]).to.have.keys(
+          expect(body.comment.author).to.be.a("string");
+          expect(body.comment).to.have.keys(
             "comment_id",
             "author",
             "article_id",
@@ -359,17 +381,30 @@ describe("/", () => {
             "created_at",
             "body"
           );
-          expect(body.comment[0].comment_id).to.be.a("number");
-          expect(body.comment[0].body).to.be.a("string");
+          expect(body.comment.comment_id).to.be.a("number");
+          expect(body.comment.body).to.be.a("string");
         });
     });
     describe("Errors on POST /api/articles/:article_id/comments", () => {
-      it("GET status 405 responds with an error when given an invalid method", () => {
+      it("POST status 405 responds with an error when given an invalid method", () => {
         return request(app)
           .put("/api/articles/1/comments")
           .expect(405)
           .then(({ body }) => {
             expect(body.msg).to.equal("Method Not Allowed");
+          });
+      });
+      it("POST status:400 responds with an error when the request does not include all required keys", () => {
+        return request(app)
+          .post("/api/articles/1/comments")
+          .send({
+            username: "lurker"
+          })
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).to.equal(
+              "Bad Request: null value in column violates not-null constraint"
+            );
           });
       });
     });
@@ -386,7 +421,7 @@ describe("/", () => {
         .send({ inc_votes: 1 })
         .expect(200)
         .then(({ body }) => {
-          expect(body.comment[0].votes).to.equal(17);
+          expect(body.comment.votes).to.equal(17);
         });
     });
     it("PATCH status:200 accepts a body of inc_votes and decreases the vote property by a number", () => {
@@ -395,8 +430,8 @@ describe("/", () => {
         .send({ inc_votes: -1 })
         .expect(200)
         .then(({ body }) => {
-          expect(body.comment[0].votes).to.equal(15);
-          expect(body.comment[0]).to.eql({
+          expect(body.comment.votes).to.equal(15);
+          expect(body.comment).to.eql({
             comment_id: 1,
             author: "butter_bridge",
             article_id: 9,
@@ -429,9 +464,9 @@ describe("/", () => {
         .get("/api/users/lurker")
         .expect(200)
         .then(({ body }) => {
-          expect(body.user[0]).to.have.keys("username", "avatar_url", "name");
-          expect(body.user[0].avatar_url).to.be.a("string");
-          expect(body.user[0].name).to.be.a("string");
+          expect(body.user).to.have.keys("username", "avatar_url", "name");
+          expect(body.user.avatar_url).to.be.a("string");
+          expect(body.user.name).to.be.a("string");
         });
     });
     describe("Errors on /api/users/:username", () => {
