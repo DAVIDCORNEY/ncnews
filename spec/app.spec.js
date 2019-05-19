@@ -407,6 +407,34 @@ describe("/", () => {
             );
           });
       });
+      it("POST status:422 responds with an error when the post contains a valid article id that does not exist", () => {
+        return request(app)
+          .post("/api/articles/99999/comments")
+          .send({
+            username: "lurker",
+            body: "test"
+          })
+          .expect(422)
+          .then(({ body }) => {
+            expect(body.msg).to.equal(
+              "Unprocessable Entity:POST contains a valid article ID that does not exist"
+            );
+          });
+      });
+      it("POST status:400 responds with an error when the post contains an invalid article id", () => {
+        return request(app)
+          .post("/api/articles/not-an-id/comments")
+          .send({
+            username: "lurker",
+            body: "test"
+          })
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).to.equal(
+              "Bad request: Invalid Input Syntax for Type Integer"
+            );
+          });
+      });
     });
   });
   describe("/api/comments/:comment_id", () => {
@@ -422,6 +450,15 @@ describe("/", () => {
         .expect(200)
         .then(({ body }) => {
           expect(body.comment.votes).to.equal(17);
+        });
+    });
+    it("PATCH status:200 when sent a body with no inc_votes property", () => {
+      return request(app)
+        .patch("/api/comments/1")
+        .send({})
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.comment.votes).to.equal(16);
         });
     });
     it("PATCH status:200 accepts a body of inc_votes and decreases the vote property by a number", () => {
@@ -443,12 +480,43 @@ describe("/", () => {
         });
     });
     describe("Errors on /api/comments/:comment_id", () => {
-      it("GET status 405 responds with an error when given an invalid method", () => {
+      it("PATCH status: 405 responds with an error when given an invalid method", () => {
         return request(app)
           .put("/api/comments/1")
           .expect(405)
           .then(({ body }) => {
             expect(body.msg).to.equal("Method Not Allowed");
+          });
+      });
+      it("PATCH status: 400 responds with an error when sent an invalid inc_votes value", () => {
+        return request(app)
+          .patch("/api/comments/1")
+          .send({ inc_votes: "a" })
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).to.equal(
+              "Bad request: Invalid Input Syntax for Type Integer"
+            );
+          });
+      });
+      it("PATCH status: 404 responds with an error when PATCH contains a valid comments id that does not exist", () => {
+        return request(app)
+          .patch("/api/comments/99999")
+          .send({ inc_votes: 1 })
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).to.equal("Route Not Found");
+          });
+      });
+      it("PATCH status: 400 responds with an error of Bad Request when patch contains an invalid comment_id", () => {
+        return request(app)
+          .patch("/api/comments/not-a-valid-id")
+          .send({ inc_votes: 1 })
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).to.equal(
+              "Bad request: Invalid Input Syntax for Type Integer"
+            );
           });
       });
     });
@@ -495,12 +563,30 @@ describe("/", () => {
         .expect(204);
     });
     describe("Errors on /api/comments/:comment_id", () => {
-      it("GET status 405 responds with an error when given an invalid method", () => {
+      it("DELETE -  status 405 responds with an error when given an invalid method", () => {
         return request(app)
           .put("/api/comments/1")
           .expect(405)
           .then(({ body }) => {
             expect(body.msg).to.equal("Method Not Allowed");
+          });
+      });
+      it("DELETE - status 404 responds with an error when DELETE contains a valid comment_id format that does not exist", () => {
+        return request(app)
+          .delete("/api/comments/99999")
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).to.equal("Route Not Found");
+          });
+      });
+      it("DELETE - status 400 responds with an error when DELETE contains an invalid comment_id", () => {
+        return request(app)
+          .delete("/api/comments/not-a-number")
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).to.equal(
+              "Bad request: Invalid Input Syntax for Type Integer"
+            );
           });
       });
     });

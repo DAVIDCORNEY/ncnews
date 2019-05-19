@@ -3,7 +3,14 @@ const { updateComment, removeCommentById } = require("../models/comments");
 exports.patchComment = (req, res, next) => {
   updateComment(req.params, req.body)
     .then(([comment]) => {
-      res.status(200).send({ comment });
+      if (!comment) {
+        return Promise.reject({
+          status: 404,
+          msg: "Route Not Found"
+        });
+      } else {
+        res.status(200).send({ comment });
+      }
     })
     .catch(next);
 };
@@ -11,7 +18,14 @@ exports.patchComment = (req, res, next) => {
 exports.deleteCommentById = (req, res, next) => {
   removeCommentById(req.params)
     .then(result => {
-      res.sendStatus(204);
+      if (!result) {
+        return Promise.reject({
+          status: 404,
+          msg: "Route Not Found"
+        });
+      } else {
+        res.sendStatus(204);
+      }
     })
     .catch(next);
 };
