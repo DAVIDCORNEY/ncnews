@@ -157,6 +157,14 @@ describe("/", () => {
           expect(allTopics).to.be.true;
         });
     });
+    it.only("GET status: 200 responds with an array of articles limited in number to the number in the given query", () => {
+      return request(app)
+        .get("/api/articles?limit=10")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.articles.length).to.equal(10);
+        });
+    });
     describe("Errors /api/articles", () => {
       it("GET status:400 responds with an error when given an invalid sort by query", () => {
         return request(app)

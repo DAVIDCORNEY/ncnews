@@ -3,7 +3,8 @@ exports.fetchArticles = ({
   sort_by = "created_at",
   order = "desc",
   author,
-  topic
+  topic,
+  limit = 250
 }) => {
   return connection
     .select(
@@ -19,6 +20,7 @@ exports.fetchArticles = ({
     .count("comment_id AS comment_count")
     .groupBy("articles.article_id")
     .orderBy(sort_by, order)
+    .limit(limit)
     .modify(query => {
       if (author) query.where("articles.author", "like", author);
       if (topic) query.where("articles.topic", "like", topic);
