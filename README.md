@@ -30,7 +30,7 @@ To run this API you will need to clone it to your local machine and install all 
 
 Clone this GitHub repository into the folder you want to install it
 ```
-git clone https://github.com/DAVIDCORNEY/ncnews
+git clone https://github.com/DAVIDCORNEY/ncnews.git
 ```
 Make a file knexfile.js and copy the following code into it
 ```
