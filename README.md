@@ -32,7 +32,7 @@ Clone this GitHub repository into the folder you want to install it
 ```
 git clone https://github.com/DAVIDCORNEY/ncnews.git
 ```
-Make a file knexfile.js and copy the following code into it
+Make a file knexfile.js in the root of the NC News folder (at the same level as the app.js and listen.js files) and copy the following code into it. This file name has been added to the .gitignore file.
 ```
 const ENV = process.env.NODE_ENV || "development";
 const { DB_URL } = process.env;
